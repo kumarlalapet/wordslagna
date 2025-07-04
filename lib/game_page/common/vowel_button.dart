@@ -6,6 +6,7 @@ class VowelButton extends StatelessWidget {
   final double size;
   final double fontSize;
   final bool isHighlighted;
+  final bool isDraggable;
 
   const VowelButton({
     super.key,
@@ -14,23 +15,43 @@ class VowelButton extends StatelessWidget {
     this.size = 60.0,
     this.fontSize = 18.0,
     this.isHighlighted = false,
+    this.isDraggable = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Determine colors based on draggable state and highlight state
+    Color backgroundColor;
+    Color borderColor;
+    Color shadowColor;
+    double borderWidth;
+
+    if (isDraggable) {
+      backgroundColor = isHighlighted
+          ? Colors.yellow.shade200
+          : Colors.yellow.shade100;
+      borderColor = isHighlighted
+          ? Colors.yellow.shade700
+          : Colors.yellow.shade600;
+      shadowColor = Colors.yellow.withOpacity(0.3);
+      borderWidth = 2.0;
+    } else {
+      backgroundColor = isHighlighted ? Colors.blue[100]! : Colors.white;
+      borderColor = isHighlighted ? Colors.blue[300]! : Colors.grey[300]!;
+      shadowColor = Colors.grey.withOpacity(0.2);
+      borderWidth = isHighlighted ? 2.0 : 1.0;
+    }
+
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: isHighlighted ? Colors.blue[100] : Colors.white,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(size * 0.2), // 12px for 60px size
-        border: Border.all(
-          color: isHighlighted ? Colors.blue[300]! : Colors.grey[300]!,
-          width: isHighlighted ? 2.0 : 1.0,
-        ),
+        border: Border.all(color: borderColor, width: borderWidth),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: shadowColor,
             spreadRadius: 1,
             blurRadius: 3,
             offset: const Offset(0, 2),

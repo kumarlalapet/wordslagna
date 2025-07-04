@@ -205,18 +205,20 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                         height: 60,
                         margin: const EdgeInsets.only(right: 8.0),
                         decoration: BoxDecoration(
-                          color: isEnabled ? Colors.white : Colors.grey[200],
+                          color: isEnabled
+                              ? Colors.yellow.shade100
+                              : Colors.grey[200],
                           borderRadius: BorderRadius.circular(12.0),
                           border: Border.all(
                             color: isEnabled
-                                ? Colors.grey[300]!
+                                ? Colors.yellow.shade600
                                 : Colors.grey[400]!,
-                            width: 1.0,
+                            width: 2.0,
                           ),
                           boxShadow: isEnabled
                               ? [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
+                                    color: Colors.yellow.withOpacity(0.3),
                                     spreadRadius: 1,
                                     blurRadius: 3,
                                     offset: const Offset(0, 2),
@@ -334,6 +336,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: VowelButton(
                       vowel: item,
+                      isDraggable: true, // Vowel row is draggable
                       onTap: () {
                         setState(() {
                           selectedConsonant =
@@ -365,6 +368,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: VowelButton(
                       vowel: consonant, // Using same component for now
+                      isDraggable: false, // Consonant row is not draggable
                       onTap: () {
                         setState(() {
                           if (selectedConsonant == consonant) {
@@ -450,6 +454,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                           padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           child: VowelButton(
                             vowel: conjunct,
+                            isDraggable: false, // Conjunct row is not draggable
                             onTap: () {
                               setState(() {
                                 if (selectedConjunct == conjunct) {

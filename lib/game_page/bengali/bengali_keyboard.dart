@@ -19,59 +19,107 @@ class BengaliKeyboard extends StatelessWidget {
     'ঔ',
   ];
 
+  // Bengali consonants (ব্যঞ্জনবর্ণ)
+  static const List<String> consonants = [
+    'ক',
+    'খ',
+    'গ',
+    'ঘ',
+    'ঙ',
+    'চ',
+    'ছ',
+    'জ',
+    'ঝ',
+    'ঞ',
+    'ট',
+    'ঠ',
+    'ড',
+    'ঢ',
+    'ণ',
+    'ত',
+    'থ',
+    'দ',
+    'ধ',
+    'ন',
+    'প',
+    'ফ',
+    'ব',
+    'ভ',
+    'ম',
+    'য',
+    'র',
+    'ল',
+    'শ',
+    'ষ',
+    'স',
+    'হ',
+    'ড়',
+    'ঢ়',
+    'য়',
+    'ৎ',
+    'ং',
+    'ঃ',
+    'ঁ',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // First row - Vowels (33% of bottom section)
-        Expanded(
-          flex: 1,
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: vowels.map((vowel) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: VowelButton(
-                      vowel: vowel,
-                      onTap: () {
-                        // TODO: Handle vowel selection
-                        print('Selected vowel: $vowel');
-                      },
-                    ),
-                  );
-                }).toList(),
-              ),
+        // First row - Vowels
+        Container(
+          height: 70,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: vowels.map((vowel) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: VowelButton(
+                    vowel: vowel,
+                    onTap: () {
+                      // TODO: Handle vowel selection
+                      print('Selected vowel: $vowel');
+                    },
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ),
 
-        // Placeholder for second row - Consonants (33% of bottom section)
-        Expanded(
-          flex: 1,
-          child: Container(
-            color: Colors.grey[200],
-            child: const Center(
-              child: Text(
-                'Consonants Row (Coming Soon)',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
+        // Second row - Consonants
+        Container(
+          height: 70,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: consonants.map((consonant) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: VowelButton(
+                    vowel: consonant, // Using same component for now
+                    onTap: () {
+                      // TODO: Handle consonant selection
+                      print('Selected consonant: $consonant');
+                    },
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ),
 
-        // Placeholder for third row - Conjuncts (33% of bottom section)
-        Expanded(
-          flex: 1,
-          child: Container(
-            color: Colors.grey[300],
-            child: const Center(
-              child: Text(
-                'Conjuncts Row (Coming Soon)',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
+        // Third row - Conjuncts
+        Container(
+          height: 70,
+          color: Colors.grey[300],
+          child: const Center(
+            child: Text(
+              'Conjuncts Row (Coming Soon)',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ),
         ),

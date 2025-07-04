@@ -11,6 +11,8 @@ class BengaliKeyboard extends StatefulWidget {
 class _BengaliKeyboardState extends State<BengaliKeyboard> {
   String? selectedConsonant;
   String? selectedConjunct;
+  String?
+  filteringConsonant; // Track which consonant is being used for filtering
 
   // Bengali vowels (স্বরবর্ণ)
   static const List<String> vowels = [
@@ -119,6 +121,18 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
     }
   }
 
+  List<String> _getFilteredConjuncts() {
+    if (filteringConsonant == null) {
+      // Show all conjuncts when no filtering is active
+      return commonConjuncts;
+    } else {
+      // Filter conjuncts that start with the filtering consonant
+      return commonConjuncts
+          .where((conjunct) => conjunct.startsWith(filteringConsonant!))
+          .toList();
+    }
+  }
+
   String _combineConsonantVowel(String consonant, String vowel) {
     // Map of vowels to their corresponding diacritical marks
     const Map<String, String> vowelMarks = {
@@ -166,6 +180,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                       setState(() {
                         selectedConsonant = null; // Reset to show basic vowels
                         selectedConjunct = null;
+                        filteringConsonant = null; // Clear filtering
                       });
                       print('Selected akshara: $item');
                     },
@@ -193,9 +208,11 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                         if (selectedConsonant == consonant) {
                           // If same consonant is clicked again, deselect it
                           selectedConsonant = null;
+                          filteringConsonant = null; // Clear filtering
                         } else {
                           // Select new consonant and clear any selected conjunct
                           selectedConsonant = consonant;
+                          filteringConsonant = consonant; // Set filtering
                           selectedConjunct = null;
                         }
                       });
@@ -240,6 +257,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                       setState(() {
                         selectedConsonant = null;
                         selectedConjunct = null;
+                        filteringConsonant = null; // Clear filtering
                       });
                       print('Clear button pressed');
                     },
@@ -297,7 +315,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: commonConjuncts.map((conjunct) {
+                    children: _getFilteredConjuncts().map((conjunct) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: VowelButton(
@@ -307,10 +325,13 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                               if (selectedConjunct == conjunct) {
                                 // If same conjunct is clicked again, deselect it
                                 selectedConjunct = null;
+                                filteringConsonant =
+                                    null; // Clear filtering to show all conjuncts
                               } else {
                                 // Select new conjunct and clear any selected consonant
                                 selectedConjunct = conjunct;
                                 selectedConsonant = null;
+                                // Keep filteringConsonant unchanged to maintain filtered view
                               }
                             });
                             print('Selected conjunct: $conjunct');

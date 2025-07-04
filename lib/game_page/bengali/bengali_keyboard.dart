@@ -110,11 +110,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
   ];
 
   List<String> _getVowelRowItems() {
-    if (selectedAuxSign != null) {
-      // Show auxiliary sign combination
-      String base = selectedConjunct ?? selectedConsonant!;
-      return [base + selectedAuxSign!];
-    } else if (selectedConjunct != null) {
+    if (selectedConjunct != null) {
       // Show conjunct + vowel combinations
       return vowels
           .map((vowel) => _combineConsonantVowel(selectedConjunct!, vowel))
@@ -143,10 +139,9 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
   }
 
   bool _isAuxSignEnabled(String auxSign) {
-    // Only ৎ (khanda ta) is enabled when a consonant or conjunct is selected but no vowel has been added
+    // Only ৎ (khanda ta) is enabled when a consonant or conjunct is selected
     return auxSign == 'ৎ' &&
-        (selectedConsonant != null || selectedConjunct != null) &&
-        selectedAuxSign == null;
+        (selectedConsonant != null || selectedConjunct != null);
   }
 
   String _combineConsonantVowel(String consonant, String vowel) {
@@ -193,6 +188,18 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: auxiliarySigns.map((auxSign) {
                       bool isEnabled = _isAuxSignEnabled(auxSign);
+                      String displayText = auxSign;
+
+                      // If it's ৎ and a consonant/conjunct is selected, show the combination
+                      if (auxSign == 'ৎ' &&
+                          (selectedConsonant != null ||
+                              selectedConjunct != null)) {
+                        String base = selectedConjunct ?? selectedConsonant!;
+                        displayText = base + 'ৎ';
+                        isEnabled =
+                            true; // Always enable when showing combination
+                      }
+
                       return Container(
                         width: 60,
                         height: 60,
@@ -223,17 +230,39 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                             borderRadius: BorderRadius.circular(12.0),
                             onTap: isEnabled
                                 ? () {
-                                    setState(() {
-                                      selectedAuxSign = auxSign;
-                                    });
-                                    print('Selected auxiliary sign: $auxSign');
+                                    if (auxSign == 'ৎ' &&
+                                        (selectedConsonant != null ||
+                                            selectedConjunct != null)) {
+                                      // Reset the board when consonant+ৎ is clicked
+                                      String base =
+                                          selectedConjunct ??
+                                          selectedConsonant!;
+                                      String clickedAkshara = base + 'ৎ';
+                                      setState(() {
+                                        selectedConsonant = null;
+                                        selectedConjunct = null;
+                                        filteringConsonant = null;
+                                        selectedAuxSign = null;
+                                      });
+                                      print(
+                                        'Reset board - clicked akshara: $clickedAkshara',
+                                      );
+                                    } else {
+                                      // Normal auxiliary sign selection
+                                      setState(() {
+                                        selectedAuxSign = auxSign;
+                                      });
+                                      print(
+                                        'Selected auxiliary sign: $auxSign',
+                                      );
+                                    }
                                   }
                                 : null,
                             child: Center(
                               child: Text(
-                                auxSign,
+                                displayText,
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: displayText.length > 1 ? 14 : 18,
                                   fontWeight: FontWeight.bold,
                                   color: isEnabled
                                       ? Colors.black87
@@ -348,7 +377,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                             selectedConsonant = consonant;
                             filteringConsonant = consonant; // Set filtering
                             selectedConjunct = null;
-                            selectedAuxSign = null; // Clear auxiliary sign
+                            // Don't clear selectedAuxSign - let it remain if ৎ was selected
                           }
                         });
                         print('Selected consonant: $consonant');
@@ -434,8 +463,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                                   // Select new conjunct and clear any selected consonant
                                   selectedConjunct = conjunct;
                                   selectedConsonant = null;
-                                  selectedAuxSign =
-                                      null; // Clear auxiliary sign
+                                  // Don't clear selectedAuxSign - let it remain if ৎ was selected
                                   // Keep filteringConsonant unchanged to maintain filtered view
                                 }
                               });

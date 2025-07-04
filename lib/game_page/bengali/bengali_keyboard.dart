@@ -72,39 +72,34 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
 
   // Most common Bengali conjuncts
   static const List<String> commonConjuncts = [
-    'ক্ত',
-    'ক্ষ',
-    'ক্র',
-    'ক্ল',
-    'ক্ব',
-    'স্ত',
-    'স্প',
-    'স্ম',
-    'স্ন',
-    'স্ল',
-    'ন্দ',
-    'ন্ত',
-    'ন্ম',
-    'ন্ব',
-    'ন্র',
-    'প্ত',
-    'প্ল',
-    'প্র',
-    'প্স',
-    'ম্প',
-    'ম্ল',
-    'ম্র',
-    'ম্ব',
-    'ত্র',
-    'থ্র',
-    'দ্র',
-    'ধ্র',
-    'ব্র',
-    'ভ্র',
-    'ম্র',
-    'শ্র',
-    'ষ্ম',
-    'স্ম',
+    // ক-based conjuncts
+    'ক্ক', 'ক্ত', 'ক্ষ', 'ক্ষ্ম', 'ক্র', 'ক্ল', 'ক্ব',
+    // চ-based conjuncts
+    'চ্চ',
+    // ত-based conjuncts
+    'ত্ত', 'ত্র', 'থ্র',
+    // দ-based conjuncts
+    'দ্দ', 'দ্র', 'ধ্র',
+    // ন-based conjuncts
+    'ন্দ', 'ন্ত', 'ন্ম', 'ন্ব', 'ন্র',
+    // ঙ-based conjuncts
+    'ঙ্গ',
+    // প-based conjuncts
+    'প্ত', 'প্ল', 'প্র', 'প্স',
+    // ম-based conjuncts
+    'ম্প', 'ম্ল', 'ম্র', 'ম্ব',
+    // ব-based conjuncts
+    'ব্র', 'ভ্র',
+    // ল-based conjuncts
+    'ল্ল',
+    // শ/ষ/স-based conjuncts
+    'শ্র', 'ষ্ট', 'ষ্ম', 'স্থ', 'স্প', 'স্ম', 'স্ন', 'স্ল',
+    // হ-based conjuncts
+    'হ্ম',
+    // গ-based conjuncts
+    'গ্র',
+    // জ-based conjuncts
+    'জ্ঞ',
   ];
 
   List<String> _getVowelRowItems() {

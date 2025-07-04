@@ -190,8 +190,14 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                     vowel: consonant, // Using same component for now
                     onTap: () {
                       setState(() {
-                        selectedConsonant = consonant;
-                        selectedConjunct = null; // Clear any selected conjunct
+                        if (selectedConsonant == consonant) {
+                          // If same consonant is clicked again, deselect it
+                          selectedConsonant = null;
+                        } else {
+                          // Select new consonant and clear any selected conjunct
+                          selectedConsonant = consonant;
+                          selectedConjunct = null;
+                        }
                       });
                       print('Selected consonant: $consonant');
                     },
@@ -298,9 +304,14 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                           vowel: conjunct,
                           onTap: () {
                             setState(() {
-                              selectedConjunct = conjunct;
-                              selectedConsonant =
-                                  null; // Clear any selected consonant
+                              if (selectedConjunct == conjunct) {
+                                // If same conjunct is clicked again, deselect it
+                                selectedConjunct = null;
+                              } else {
+                                // Select new conjunct and clear any selected consonant
+                                selectedConjunct = conjunct;
+                                selectedConsonant = null;
+                              }
                             });
                             print('Selected conjunct: $conjunct');
                           },

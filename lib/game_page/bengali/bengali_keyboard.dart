@@ -13,6 +13,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
   String? selectedConjunct;
   String?
   filteringConsonant; // Track which consonant is being used for filtering
+  String? selectedAuxSign; // Track selected auxiliary sign
 
   // Bengali vowels (স্বরবর্ণ)
   static const List<String> vowels = [
@@ -109,7 +110,11 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
   ];
 
   List<String> _getVowelRowItems() {
-    if (selectedConjunct != null) {
+    if (selectedAuxSign != null) {
+      // Show auxiliary sign combination
+      String base = selectedConjunct ?? selectedConsonant!;
+      return [base + selectedAuxSign!];
+    } else if (selectedConjunct != null) {
       // Show conjunct + vowel combinations
       return vowels
           .map((vowel) => _combineConsonantVowel(selectedConjunct!, vowel))
@@ -135,6 +140,13 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
           .where((conjunct) => conjunct.startsWith(filteringConsonant!))
           .toList();
     }
+  }
+
+  bool _isAuxSignEnabled(String auxSign) {
+    // Only ৎ (khanda ta) is enabled when a consonant or conjunct is selected but no vowel has been added
+    return auxSign == 'ৎ' &&
+        (selectedConsonant != null || selectedConjunct != null) &&
+        selectedAuxSign == null;
   }
 
   String _combineConsonantVowel(String consonant, String vowel) {
@@ -168,7 +180,119 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // First row - Vowels or Consonant + Vowels
+        // First row - Reset button and Auxiliary Signs (moved from 4th row)
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+            child: Row(
+              children: [
+                // Fixed auxiliary signs (non-scrollable) - left side
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: auxiliarySigns.map((auxSign) {
+                      bool isEnabled = _isAuxSignEnabled(auxSign);
+                      return Container(
+                        width: 60,
+                        height: 60,
+                        margin: const EdgeInsets.only(right: 8.0),
+                        decoration: BoxDecoration(
+                          color: isEnabled ? Colors.white : Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12.0),
+                          border: Border.all(
+                            color: isEnabled
+                                ? Colors.grey[300]!
+                                : Colors.grey[400]!,
+                            width: 1.0,
+                          ),
+                          boxShadow: isEnabled
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12.0),
+                            onTap: isEnabled
+                                ? () {
+                                    setState(() {
+                                      selectedAuxSign = auxSign;
+                                    });
+                                    print('Selected auxiliary sign: $auxSign');
+                                  }
+                                : null,
+                            child: Center(
+                              child: Text(
+                                auxSign,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: isEnabled
+                                      ? Colors.black87
+                                      : Colors.grey[500],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                // Reset button - right side
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(color: Colors.grey[300]!, width: 1.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12.0),
+                      onTap: () {
+                        setState(() {
+                          selectedConsonant = null;
+                          selectedConjunct = null;
+                          filteringConsonant = null; // Clear filtering
+                          selectedAuxSign = null; // Clear auxiliary sign
+                        });
+                        print('Clear button pressed');
+                      },
+                      child: const Center(
+                        child: Icon(
+                          Icons.refresh,
+                          color: Colors.grey,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Second row - Vowels or Consonant + Vowels (moved from 1st row)
         Expanded(
           flex: 1,
           child: Container(
@@ -187,6 +311,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                               null; // Reset to show basic vowels
                           selectedConjunct = null;
                           filteringConsonant = null; // Clear filtering
+                          selectedAuxSign = null; // Clear auxiliary sign
                         });
                         print('Selected akshara: $item');
                       },
@@ -198,7 +323,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
           ),
         ),
 
-        // Second row - Consonants
+        // Third row - Consonants (moved from 2nd row)
         Expanded(
           flex: 1,
           child: Container(
@@ -217,11 +342,13 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                             // If same consonant is clicked again, deselect it
                             selectedConsonant = null;
                             filteringConsonant = null; // Clear filtering
+                            selectedAuxSign = null; // Clear auxiliary sign
                           } else {
                             // Select new consonant and clear any selected conjunct
                             selectedConsonant = consonant;
                             filteringConsonant = consonant; // Set filtering
                             selectedConjunct = null;
+                            selectedAuxSign = null; // Clear auxiliary sign
                           }
                         });
                         print('Selected consonant: $consonant');
@@ -235,7 +362,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
           ),
         ),
 
-        // Third row - Hasanta and Common Conjuncts
+        // Fourth row - Hasanta and Common Conjuncts (moved from 3rd row)
         Expanded(
           flex: 1,
           child: Container(
@@ -301,107 +428,20 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                                   selectedConjunct = null;
                                   filteringConsonant =
                                       null; // Clear filtering to show all conjuncts
+                                  selectedAuxSign =
+                                      null; // Clear auxiliary sign
                                 } else {
                                   // Select new conjunct and clear any selected consonant
                                   selectedConjunct = conjunct;
                                   selectedConsonant = null;
+                                  selectedAuxSign =
+                                      null; // Clear auxiliary sign
                                   // Keep filteringConsonant unchanged to maintain filtered view
                                 }
                               });
                               print('Selected conjunct: $conjunct');
                             },
                             isHighlighted: selectedConjunct == conjunct,
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        // Fourth row - Reset button and Auxiliary Signs
-        Expanded(
-          flex: 1,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-            child: Row(
-              children: [
-                // Reset button
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.0),
-                    border: Border.all(color: Colors.grey[300]!, width: 1.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(12.0),
-                      onTap: () {
-                        setState(() {
-                          selectedConsonant = null;
-                          selectedConjunct = null;
-                          filteringConsonant = null; // Clear filtering
-                        });
-                        print('Clear button pressed');
-                      },
-                      child: const Center(
-                        child: Icon(
-                          Icons.refresh,
-                          color: Colors.grey,
-                          size: 24,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                // Vertical divider
-                Container(width: 2, height: 50, color: Colors.grey),
-                const SizedBox(width: 8),
-                // Scrollable auxiliary signs (disabled in initial state)
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: auxiliarySigns.map((auxSign) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200], // Disabled appearance
-                              borderRadius: BorderRadius.circular(12.0),
-                              border: Border.all(
-                                color: Colors.grey[400]!,
-                                width: 1.0,
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                auxSign,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color:
-                                      Colors.grey[500], // Disabled text color
-                                ),
-                              ),
-                            ),
                           ),
                         );
                       }).toList(),

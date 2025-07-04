@@ -165,185 +165,210 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
     return Column(
       children: [
         // First row - Vowels or Consonant + Vowels
-        Container(
-          height: 70,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: _getVowelRowItems().map((item) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: VowelButton(
-                    vowel: item,
-                    onTap: () {
-                      setState(() {
-                        selectedConsonant = null; // Reset to show basic vowels
-                        selectedConjunct = null;
-                        filteringConsonant = null; // Clear filtering
-                      });
-                      print('Selected akshara: $item');
-                    },
-                  ),
-                );
-              }).toList(),
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: _getVowelRowItems().map((item) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: VowelButton(
+                      vowel: item,
+                      onTap: () {
+                        setState(() {
+                          selectedConsonant =
+                              null; // Reset to show basic vowels
+                          selectedConjunct = null;
+                          filteringConsonant = null; // Clear filtering
+                        });
+                        print('Selected akshara: $item');
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ),
 
         // Second row - Consonants
-        Container(
-          height: 70,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: consonants.map((consonant) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: VowelButton(
-                    vowel: consonant, // Using same component for now
-                    onTap: () {
-                      setState(() {
-                        if (selectedConsonant == consonant) {
-                          // If same consonant is clicked again, deselect it
-                          selectedConsonant = null;
-                          filteringConsonant = null; // Clear filtering
-                        } else {
-                          // Select new consonant and clear any selected conjunct
-                          selectedConsonant = consonant;
-                          filteringConsonant = consonant; // Set filtering
-                          selectedConjunct = null;
-                        }
-                      });
-                      print('Selected consonant: $consonant');
-                    },
-                    isHighlighted: selectedConsonant == consonant,
-                  ),
-                );
-              }).toList(),
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: consonants.map((consonant) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: VowelButton(
+                      vowel: consonant, // Using same component for now
+                      onTap: () {
+                        setState(() {
+                          if (selectedConsonant == consonant) {
+                            // If same consonant is clicked again, deselect it
+                            selectedConsonant = null;
+                            filteringConsonant = null; // Clear filtering
+                          } else {
+                            // Select new consonant and clear any selected conjunct
+                            selectedConsonant = consonant;
+                            filteringConsonant = consonant; // Set filtering
+                            selectedConjunct = null;
+                          }
+                        });
+                        print('Selected consonant: $consonant');
+                      },
+                      isHighlighted: selectedConsonant == consonant,
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ),
 
         // Third row - Clear, Hasanta, and Common Conjuncts
-        Container(
-          height: 70,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-          child: Row(
-            children: [
-              // Clear button
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.0),
-                  border: Border.all(color: Colors.grey[300]!, width: 1.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+            child: Row(
+              children: [
+                // Clear button
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(12.0),
-                    onTap: () {
-                      setState(() {
-                        selectedConsonant = null;
-                        selectedConjunct = null;
-                        filteringConsonant = null; // Clear filtering
-                      });
-                      print('Clear button pressed');
-                    },
-                    child: const Center(
-                      child: Icon(Icons.refresh, color: Colors.grey, size: 24),
-                    ),
+                    border: Border.all(color: Colors.grey[300]!, width: 1.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              // Hasanta button
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.0),
-                  border: Border.all(color: Colors.grey[300]!, width: 1.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12.0),
-                    onTap: () {
-                      // TODO: Handle hasanta functionality
-                      print('Hasanta button pressed');
-                    },
-                    child: const Center(
-                      child: Text(
-                        '্',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12.0),
+                      onTap: () {
+                        setState(() {
+                          selectedConsonant = null;
+                          selectedConjunct = null;
+                          filteringConsonant = null; // Clear filtering
+                        });
+                        print('Clear button pressed');
+                      },
+                      child: const Center(
+                        child: Icon(
+                          Icons.refresh,
                           color: Colors.grey,
+                          size: 24,
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              // Vertical divider
-              Container(width: 2, height: 50, color: Colors.grey),
-              const SizedBox(width: 8),
-              // Scrollable common conjuncts
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: _getFilteredConjuncts().map((conjunct) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: VowelButton(
-                          vowel: conjunct,
-                          onTap: () {
-                            setState(() {
-                              if (selectedConjunct == conjunct) {
-                                // If same conjunct is clicked again, deselect it
-                                selectedConjunct = null;
-                                filteringConsonant =
-                                    null; // Clear filtering to show all conjuncts
-                              } else {
-                                // Select new conjunct and clear any selected consonant
-                                selectedConjunct = conjunct;
-                                selectedConsonant = null;
-                                // Keep filteringConsonant unchanged to maintain filtered view
-                              }
-                            });
-                            print('Selected conjunct: $conjunct');
-                          },
-                          isHighlighted: selectedConjunct == conjunct,
+                const SizedBox(width: 8),
+                // Hasanta button
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(color: Colors.grey[300]!, width: 1.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12.0),
+                      onTap: () {
+                        // TODO: Handle hasanta functionality
+                        print('Hasanta button pressed');
+                      },
+                      child: const Center(
+                        child: Text(
+                          '্',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
                         ),
-                      );
-                    }).toList(),
+                      ),
+                    ),
                   ),
                 ),
+                const SizedBox(width: 8),
+                // Vertical divider
+                Container(width: 2, height: 50, color: Colors.grey),
+                const SizedBox(width: 8),
+                // Scrollable common conjuncts
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: _getFilteredConjuncts().map((conjunct) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: VowelButton(
+                            vowel: conjunct,
+                            onTap: () {
+                              setState(() {
+                                if (selectedConjunct == conjunct) {
+                                  // If same conjunct is clicked again, deselect it
+                                  selectedConjunct = null;
+                                  filteringConsonant =
+                                      null; // Clear filtering to show all conjuncts
+                                } else {
+                                  // Select new conjunct and clear any selected consonant
+                                  selectedConjunct = conjunct;
+                                  selectedConsonant = null;
+                                  // Keep filteringConsonant unchanged to maintain filtered view
+                                }
+                              });
+                              print('Selected conjunct: $conjunct');
+                            },
+                            isHighlighted: selectedConjunct == conjunct,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Fourth row - Blank for now
+        Expanded(
+          flex: 1,
+          child: Container(
+            color: Colors.grey[100],
+            child: const Center(
+              child: Text(
+                'Fourth Row (Coming Soon)',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
-            ],
+            ),
           ),
         ),
       ],

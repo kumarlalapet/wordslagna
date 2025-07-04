@@ -29,7 +29,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
     'ঔ',
   ];
 
-  // Bengali consonants (ব্যঞ্জনবর্ণ)
+  // Bengali consonants (ব্যঞ্জনবর্ণ) - True consonants only
   static const List<String> consonants = [
     'ক',
     'খ',
@@ -66,10 +66,14 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
     'ড়',
     'ঢ়',
     'য়',
-    'ৎ',
-    'ং',
-    'ঃ',
-    'ঁ',
+  ];
+
+  // Auxiliary orthographic signs
+  static const List<String> auxiliarySigns = [
+    'ৎ', // khanda ta
+    'ং', // anusvara
+    'ঃ', // visarga
+    'ঁ', // candrabindu
   ];
 
   // Most common Bengali conjuncts
@@ -231,53 +235,13 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
           ),
         ),
 
-        // Third row - Clear, Hasanta, and Common Conjuncts
+        // Third row - Hasanta and Common Conjuncts
         Expanded(
           flex: 1,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
             child: Row(
               children: [
-                // Clear button
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.0),
-                    border: Border.all(color: Colors.grey[300]!, width: 1.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(12.0),
-                      onTap: () {
-                        setState(() {
-                          selectedConsonant = null;
-                          selectedConjunct = null;
-                          filteringConsonant = null; // Clear filtering
-                        });
-                        print('Clear button pressed');
-                      },
-                      child: const Center(
-                        child: Icon(
-                          Icons.refresh,
-                          color: Colors.grey,
-                          size: 24,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
                 // Hasanta button
                 Container(
                   width: 60,
@@ -358,16 +322,93 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
           ),
         ),
 
-        // Fourth row - Blank for now
+        // Fourth row - Reset button and Auxiliary Signs
         Expanded(
           flex: 1,
           child: Container(
-            color: Colors.grey[100],
-            child: const Center(
-              child: Text(
-                'Fourth Row (Coming Soon)',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+            child: Row(
+              children: [
+                // Reset button
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(color: Colors.grey[300]!, width: 1.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12.0),
+                      onTap: () {
+                        setState(() {
+                          selectedConsonant = null;
+                          selectedConjunct = null;
+                          filteringConsonant = null; // Clear filtering
+                        });
+                        print('Clear button pressed');
+                      },
+                      child: const Center(
+                        child: Icon(
+                          Icons.refresh,
+                          color: Colors.grey,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Vertical divider
+                Container(width: 2, height: 50, color: Colors.grey),
+                const SizedBox(width: 8),
+                // Scrollable auxiliary signs (disabled in initial state)
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: auxiliarySigns.map((auxSign) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200], // Disabled appearance
+                              borderRadius: BorderRadius.circular(12.0),
+                              border: Border.all(
+                                color: Colors.grey[400]!,
+                                width: 1.0,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                auxSign,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      Colors.grey[500], // Disabled text color
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

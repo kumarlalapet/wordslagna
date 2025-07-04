@@ -338,13 +338,6 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                       vowel: item,
                       isDraggable: true, // Vowel row is draggable
                       onTap: () {
-                        setState(() {
-                          selectedConsonant =
-                              null; // Reset to show basic vowels
-                          selectedConjunct = null;
-                          filteringConsonant = null; // Clear filtering
-                          selectedAuxSign = null; // Clear auxiliary sign
-                        });
                         print('Selected akshara: $item');
                       },
                     ),

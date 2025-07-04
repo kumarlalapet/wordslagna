@@ -125,7 +125,9 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                   child: VowelButton(
                     vowel: item,
                     onTap: () {
-                      // TODO: Handle akshara selection
+                      setState(() {
+                        selectedConsonant = null; // Reset to show basic vowels
+                      });
                       print('Selected akshara: $item');
                     },
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'bengali/bengali_keyboard.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -50,21 +51,12 @@ class _GamePageState extends State<GamePage> {
               ),
             ),
 
-            // Bottom part - 30% (flex: 3)
+            // Bottom part - 30% (flex: 3) - Bengali Keyboard
             Expanded(
               flex: 3,
               child: Container(
-                color: Colors.orange[100],
-                child: const Center(
-                  child: Text(
-                    'BOTTOM',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.orange,
-                    ),
-                  ),
-                ),
+                color: Colors.grey[50],
+                child: const BengaliKeyboard(),
               ),
             ),
           ],

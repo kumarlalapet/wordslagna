@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import '../common/vowel_button.dart';
 
-class BengaliKeyboard extends StatelessWidget {
+class BengaliKeyboard extends StatefulWidget {
   const BengaliKeyboard({super.key});
+
+  @override
+  State<BengaliKeyboard> createState() => _BengaliKeyboardState();
+}
+
+class _BengaliKeyboardState extends State<BengaliKeyboard> {
+  String? selectedConsonant;
 
   // Bengali vowels (স্বরবর্ণ)
   static const List<String> vowels = [
@@ -62,25 +69,64 @@ class BengaliKeyboard extends StatelessWidget {
     'ঁ',
   ];
 
+  List<String> _getVowelRowItems() {
+    if (selectedConsonant == null) {
+      // Show just vowels when no consonant is selected
+      return vowels;
+    } else {
+      // Show consonant + vowel combinations with proper akshara formation
+      return vowels
+          .map((vowel) => _combineConsonantVowel(selectedConsonant!, vowel))
+          .toList();
+    }
+  }
+
+  String _combineConsonantVowel(String consonant, String vowel) {
+    // Map of vowels to their corresponding diacritical marks
+    const Map<String, String> vowelMarks = {
+      'অ': '', // inherent vowel, no mark needed
+      'আ': 'া',
+      'ই': 'ি',
+      'ঈ': 'ী',
+      'উ': 'ু',
+      'ঊ': 'ূ',
+      'ঋ': 'ৃ',
+      'এ': 'ে',
+      'ঐ': 'ৈ',
+      'ও': 'ো',
+      'ঔ': 'ৌ',
+    };
+
+    String vowelMark = vowelMarks[vowel] ?? '';
+
+    if (vowelMark.isEmpty) {
+      // For অ (inherent vowel), just return the consonant
+      return consonant;
+    } else {
+      // For other vowels, combine consonant with vowel mark
+      return consonant + vowelMark;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // First row - Vowels
+        // First row - Vowels or Consonant + Vowels
         Container(
           height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: vowels.map((vowel) {
+              children: _getVowelRowItems().map((item) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: VowelButton(
-                    vowel: vowel,
+                    vowel: item,
                     onTap: () {
-                      // TODO: Handle vowel selection
-                      print('Selected vowel: $vowel');
+                      // TODO: Handle akshara selection
+                      print('Selected akshara: $item');
                     },
                   ),
                 );
@@ -102,7 +148,9 @@ class BengaliKeyboard extends StatelessWidget {
                   child: VowelButton(
                     vowel: consonant, // Using same component for now
                     onTap: () {
-                      // TODO: Handle consonant selection
+                      setState(() {
+                        selectedConsonant = consonant;
+                      });
                       print('Selected consonant: $consonant');
                     },
                   ),

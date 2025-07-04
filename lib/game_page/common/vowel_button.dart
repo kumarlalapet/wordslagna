@@ -5,6 +5,7 @@ class VowelButton extends StatelessWidget {
   final VoidCallback? onTap;
   final double size;
   final double fontSize;
+  final bool isHighlighted;
 
   const VowelButton({
     super.key,
@@ -12,6 +13,7 @@ class VowelButton extends StatelessWidget {
     this.onTap,
     this.size = 60.0,
     this.fontSize = 18.0,
+    this.isHighlighted = false,
   });
 
   @override
@@ -20,9 +22,12 @@ class VowelButton extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isHighlighted ? Colors.blue[100] : Colors.white,
         borderRadius: BorderRadius.circular(size * 0.2), // 12px for 60px size
-        border: Border.all(color: Colors.grey[300]!, width: 1.0),
+        border: Border.all(
+          color: isHighlighted ? Colors.blue[300]! : Colors.grey[300]!,
+          width: isHighlighted ? 2.0 : 1.0,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
@@ -43,7 +48,7 @@ class VowelButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: isHighlighted ? Colors.blue[700] : Colors.black87,
               ),
             ),
           ),

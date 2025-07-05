@@ -11,6 +11,7 @@ class BengaliKeyboard extends StatefulWidget {
 class _BengaliKeyboardState extends State<BengaliKeyboard> {
   String? selectedConsonant;
   String? selectedConjunct;
+  String? selectedVowel; // Track selected vowel
   String?
   filteringConsonant; // Track which consonant is being used for filtering
   String? selectedAuxSign; // Track selected auxiliary sign
@@ -139,9 +140,11 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
   }
 
   bool _isAuxSignEnabled(String auxSign) {
-    // Only ৎ (khanda ta) is enabled when a consonant or conjunct is selected
+    // Only ৎ (khanda ta) is enabled when a consonant, conjunct, or vowel is selected
     return auxSign == 'ৎ' &&
-        (selectedConsonant != null || selectedConjunct != null);
+        (selectedConsonant != null ||
+            selectedConjunct != null ||
+            selectedVowel != null);
   }
 
   String _combineConsonantVowel(String consonant, String vowel) {
@@ -190,11 +193,24 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                       bool isEnabled = _isAuxSignEnabled(auxSign);
                       String displayText = auxSign;
 
-                      // If it's ৎ and a consonant/conjunct is selected, show the combination
+                      // If it's ৎ and a consonant/conjunct/vowel is selected, show the combination
                       if (auxSign == 'ৎ' &&
                           (selectedConsonant != null ||
-                              selectedConjunct != null)) {
-                        String base = selectedConjunct ?? selectedConsonant!;
+                              selectedConjunct != null ||
+                              selectedVowel != null)) {
+                        String base;
+                        if (selectedVowel != null &&
+                            (selectedConsonant != null ||
+                                selectedConjunct != null)) {
+                          // If we have both a consonant/conjunct and a vowel, use the vowel (which is already the combination)
+                          base = selectedVowel!;
+                        } else {
+                          // Otherwise use the individual consonant/conjunct/vowel
+                          base =
+                              selectedConjunct ??
+                              selectedConsonant ??
+                              selectedVowel!;
+                        }
                         displayText = base + 'ৎ';
                         isEnabled =
                             true; // Always enable when showing combination
@@ -234,15 +250,27 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                                 ? () {
                                     if (auxSign == 'ৎ' &&
                                         (selectedConsonant != null ||
-                                            selectedConjunct != null)) {
-                                      // Reset the board when consonant+ৎ is clicked
-                                      String base =
-                                          selectedConjunct ??
-                                          selectedConsonant!;
+                                            selectedConjunct != null ||
+                                            selectedVowel != null)) {
+                                      // Reset the board when consonant/conjunct/vowel+ৎ is clicked
+                                      String base;
+                                      if (selectedVowel != null &&
+                                          (selectedConsonant != null ||
+                                              selectedConjunct != null)) {
+                                        // If we have both a consonant/conjunct and a vowel, use the vowel (which is already the combination)
+                                        base = selectedVowel!;
+                                      } else {
+                                        // Otherwise use the individual consonant/conjunct/vowel
+                                        base =
+                                            selectedConjunct ??
+                                            selectedConsonant ??
+                                            selectedVowel!;
+                                      }
                                       String clickedAkshara = base + 'ৎ';
                                       setState(() {
                                         selectedConsonant = null;
                                         selectedConjunct = null;
+                                        selectedVowel = null;
                                         filteringConsonant = null;
                                         selectedAuxSign = null;
                                       });
@@ -303,6 +331,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                         setState(() {
                           selectedConsonant = null;
                           selectedConjunct = null;
+                          selectedVowel = null;
                           filteringConsonant = null; // Clear filtering
                           selectedAuxSign = null; // Clear auxiliary sign
                         });
@@ -338,6 +367,17 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                       vowel: item,
                       isDraggable: true, // Vowel row is draggable
                       onTap: () {
+                        setState(() {
+                          // Check if this is a consonant+vowel combination or just a vowel
+                          if (selectedConsonant != null ||
+                              selectedConjunct != null) {
+                            // This is a consonant+vowel combination, set it as selectedVowel
+                            selectedVowel = item;
+                          } else {
+                            // This is just a basic vowel
+                            selectedVowel = item;
+                          }
+                        });
                         print('Selected akshara: $item');
                       },
                     ),

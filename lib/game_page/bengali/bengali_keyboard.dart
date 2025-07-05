@@ -404,11 +404,14 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                             selectedConsonant = null;
                             filteringConsonant = null; // Clear filtering
                             selectedAuxSign = null; // Clear auxiliary sign
+                            selectedVowel = null;
+                            selectedConjunct = null;
                           } else {
-                            // Select new consonant and clear any selected conjunct
+                            // Select new consonant and clear any selected conjunct and vowel
                             selectedConsonant = consonant;
                             filteringConsonant = consonant; // Set filtering
                             selectedConjunct = null;
+                            selectedVowel = null;
                             // Don't clear selectedAuxSign - let it remain if ৎ was selected
                           }
                         });
@@ -461,10 +464,13 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                                       null; // Clear filtering to show all conjuncts
                                   selectedAuxSign =
                                       null; // Clear auxiliary sign
+                                  selectedVowel = null;
+                                  selectedConsonant = null;
                                 } else {
-                                  // Select new conjunct and clear any selected consonant
+                                  // Select new conjunct and clear any selected consonant and vowel
                                   selectedConjunct = conjunct;
                                   selectedConsonant = null;
+                                  selectedVowel = null;
                                   // Don't clear selectedAuxSign - let it remain if ৎ was selected
                                   // Keep filteringConsonant unchanged to maintain filtered view
                                 }

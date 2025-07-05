@@ -7,6 +7,7 @@ class VowelButton extends StatelessWidget {
   final double fontSize;
   final bool isHighlighted;
   final bool isDraggable;
+  final bool isGreyedOut;
 
   const VowelButton({
     super.key,
@@ -16,17 +17,23 @@ class VowelButton extends StatelessWidget {
     this.fontSize = 18.0,
     this.isHighlighted = false,
     this.isDraggable = false,
+    this.isGreyedOut = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Determine colors based on draggable state and highlight state
+    // Determine colors based on draggable state, highlight state, and greyed out
     Color backgroundColor;
     Color borderColor;
     Color shadowColor;
     double borderWidth;
 
-    if (isDraggable) {
+    if (isGreyedOut) {
+      backgroundColor = Colors.grey[200]!;
+      borderColor = Colors.grey[400]!;
+      shadowColor = Colors.grey.withOpacity(0.1);
+      borderWidth = 1.0;
+    } else if (isDraggable) {
       backgroundColor = isHighlighted
           ? Colors.yellow.shade200
           : Colors.yellow.shade100;
@@ -69,7 +76,9 @@ class VowelButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
-                color: isHighlighted ? Colors.blue[700] : Colors.black87,
+                color: isGreyedOut
+                    ? Colors.grey[500]
+                    : (isHighlighted ? Colors.blue[700] : Colors.black87),
               ),
             ),
           ),

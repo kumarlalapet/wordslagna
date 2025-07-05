@@ -192,113 +192,86 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                       bool isEnabled = _isAuxSignEnabled(auxSign);
                       String displayText = auxSign;
 
-                      // If a consonant/conjunct/vowel is selected, show the combination with auxiliary sign
-                      if (selectedConsonant != null ||
-                          selectedConjunct != null ||
-                          selectedVowel != null) {
+                      if (isEnabled) {
                         String base;
                         if (selectedVowel != null &&
                             (selectedConsonant != null ||
                                 selectedConjunct != null)) {
-                          // If we have both a consonant/conjunct and a vowel, use the vowel (which is already the combination)
                           base = selectedVowel!;
                         } else {
-                          // Otherwise use the individual consonant/conjunct/vowel
                           base =
                               selectedConjunct ??
                               selectedConsonant ??
                               selectedVowel!;
                         }
                         displayText = base + auxSign;
-                        isEnabled =
-                            true; // Always enable when showing combination
+                      }
+
+                      Widget button = VowelButton(
+                        vowel: displayText,
+                        isDraggable: isEnabled,
+                        isGreyedOut: !isEnabled,
+                        onTap: isEnabled
+                            ? () {
+                                if (selectedConsonant != null ||
+                                    selectedConjunct != null ||
+                                    selectedVowel != null) {
+                                  String base;
+                                  if (selectedVowel != null &&
+                                      (selectedConsonant != null ||
+                                          selectedConjunct != null)) {
+                                    base = selectedVowel!;
+                                  } else {
+                                    base =
+                                        selectedConjunct ??
+                                        selectedConsonant ??
+                                        selectedVowel!;
+                                  }
+                                  String clickedAkshara = base + auxSign;
+                                  setState(() {
+                                    selectedConsonant = null;
+                                    selectedConjunct = null;
+                                    selectedVowel = null;
+                                    filteringConsonant = null;
+                                    selectedAuxSign = null;
+                                  });
+                                  print(
+                                    'Reset board - clicked akshara: $clickedAkshara',
+                                  );
+                                } else {
+                                  setState(() {
+                                    selectedAuxSign = auxSign;
+                                  });
+                                  print('Selected auxiliary sign: $auxSign');
+                                }
+                              }
+                            : null,
+                      );
+
+                      if (isEnabled) {
+                        button = Draggable<String>(
+                          data: displayText,
+                          feedback: Material(
+                            color: Colors.transparent,
+                            child: VowelButton(
+                              vowel: displayText,
+                              isDraggable: true,
+                              isGreyedOut: false,
+                            ),
+                          ),
+                          childWhenDragging: Opacity(
+                            opacity: 0.5,
+                            child: button,
+                          ),
+                          child: button,
+                        );
                       }
 
                       return Container(
                         width: 60,
                         height: 60,
                         margin: const EdgeInsets.only(right: 8.0),
-                        decoration: BoxDecoration(
-                          color: isEnabled
-                              ? Colors.yellow.shade100
-                              : Colors.grey[200],
-                          borderRadius: BorderRadius.circular(12.0),
-                          border: Border.all(
-                            color: isEnabled
-                                ? Colors.yellow.shade600
-                                : Colors.grey[400]!,
-                            width: 2.0,
-                          ),
-                          boxShadow: isEnabled
-                              ? [
-                                  BoxShadow(
-                                    color: Colors.yellow.withOpacity(0.3),
-                                    spreadRadius: 1,
-                                    blurRadius: 3,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ]
-                              : null,
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(12.0),
-                            onTap: isEnabled
-                                ? () {
-                                    if (selectedConsonant != null ||
-                                        selectedConjunct != null ||
-                                        selectedVowel != null) {
-                                      // Reset the board when consonant/conjunct/vowel+auxiliary sign is clicked
-                                      String base;
-                                      if (selectedVowel != null &&
-                                          (selectedConsonant != null ||
-                                              selectedConjunct != null)) {
-                                        // If we have both a consonant/conjunct and a vowel, use the vowel (which is already the combination)
-                                        base = selectedVowel!;
-                                      } else {
-                                        // Otherwise use the individual consonant/conjunct/vowel
-                                        base =
-                                            selectedConjunct ??
-                                            selectedConsonant ??
-                                            selectedVowel!;
-                                      }
-                                      String clickedAkshara = base + auxSign;
-                                      setState(() {
-                                        selectedConsonant = null;
-                                        selectedConjunct = null;
-                                        selectedVowel = null;
-                                        filteringConsonant = null;
-                                        selectedAuxSign = null;
-                                      });
-                                      print(
-                                        'Reset board - clicked akshara: $clickedAkshara',
-                                      );
-                                    } else {
-                                      // Normal auxiliary sign selection
-                                      setState(() {
-                                        selectedAuxSign = auxSign;
-                                      });
-                                      print(
-                                        'Selected auxiliary sign: $auxSign',
-                                      );
-                                    }
-                                  }
-                                : null,
-                            child: Center(
-                              child: Text(
-                                displayText,
-                                style: TextStyle(
-                                  fontSize: displayText.length > 1 ? 14 : 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: isEnabled
-                                      ? Colors.black87
-                                      : Colors.grey[500],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        child: button,
                       );
                     }).toList(),
                   ),

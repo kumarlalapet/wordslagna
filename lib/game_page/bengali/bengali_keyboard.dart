@@ -249,7 +249,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                       );
 
                       if (isEnabled) {
-                        button = Draggable<String>(
+                        button = LongPressDraggable<String>(
                           data: displayText,
                           feedback: Material(
                             color: Colors.transparent,
@@ -355,7 +355,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                       print('Selected akshara: $item');
                     },
                   );
-                  button = Draggable<String>(
+                  button = LongPressDraggable<String>(
                     data: item,
                     feedback: Material(
                       color: Colors.transparent,

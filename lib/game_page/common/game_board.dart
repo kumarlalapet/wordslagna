@@ -58,8 +58,8 @@ class _GameBoardState extends State<GameBoard> {
                                 ? Text(
                                     akshara!,
                                     style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal,
                                       color: Colors.black87,
                                     ),
                                   )

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'bengali/bengali_keyboard.dart';
+import 'common/game_board.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -33,21 +34,13 @@ class _GamePageState extends State<GamePage> {
               ),
             ),
 
-            // Center part - 60% (flex: 6)
+            // Center part - 60% (flex: 6) - Game Board
             Expanded(
               flex: 6,
               child: Container(
-                color: Colors.green[100],
-                child: const Center(
-                  child: Text(
-                    'CENTER',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                ),
+                color: Colors.white,
+                padding: const EdgeInsets.all(8.0),
+                child: const GameBoard(),
               ),
             ),
 

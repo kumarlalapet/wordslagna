@@ -41,12 +41,16 @@ class _GameBoardState extends State<GameBoard> {
                   return Expanded(
                     child: DragTarget<String>(
                       builder: (context, candidateData, rejectedData) {
+                        final isHovering =
+                            candidateData.isNotEmpty && !isFilled;
                         return Container(
                           margin: const EdgeInsets.all(1.0),
                           decoration: BoxDecoration(
                             color: isFilled
                                 ? Colors.yellow.shade100
-                                : Colors.white,
+                                : (isHovering
+                                      ? Colors.blue.shade100
+                                      : Colors.white),
                             border: Border.all(
                               color: Colors.grey[400]!,
                               width: 1.0,

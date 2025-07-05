@@ -40,7 +40,7 @@ class _GamePageState extends State<GamePage> {
               child: Container(
                 color: Colors.white,
                 padding: const EdgeInsets.all(8.0),
-                child: const GameBoard(),
+                child: GameBoard(),
               ),
             ),
 

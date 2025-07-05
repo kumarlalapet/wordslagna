@@ -264,6 +264,15 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                             child: button,
                           ),
                           child: button,
+                          onDragStarted: () {
+                            print('Draggable started: $displayText');
+                          },
+                          onDragCompleted: () {
+                            print('Draggable completed: $displayText');
+                          },
+                          onDraggableCanceled: (velocity, offset) {
+                            print('Draggable canceled: $displayText');
+                          },
                         );
                       }
 
@@ -331,26 +340,42 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: _getVowelRowItems().map((item) {
+                  Widget button = VowelButton(
+                    vowel: item,
+                    isDraggable: true, // Vowel row is always draggable
+                    onTap: () {
+                      setState(() {
+                        if (selectedConsonant != null ||
+                            selectedConjunct != null) {
+                          selectedVowel = item;
+                        } else {
+                          selectedVowel = item;
+                        }
+                      });
+                      print('Selected akshara: $item');
+                    },
+                  );
+                  button = Draggable<String>(
+                    data: item,
+                    feedback: Material(
+                      color: Colors.transparent,
+                      child: VowelButton(vowel: item, isDraggable: true),
+                    ),
+                    childWhenDragging: Opacity(opacity: 0.5, child: button),
+                    child: button,
+                    onDragStarted: () {
+                      print('Draggable started: $item');
+                    },
+                    onDragCompleted: () {
+                      print('Draggable completed: $item');
+                    },
+                    onDraggableCanceled: (velocity, offset) {
+                      print('Draggable canceled: $item');
+                    },
+                  );
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: VowelButton(
-                      vowel: item,
-                      isDraggable: true, // Vowel row is draggable
-                      onTap: () {
-                        setState(() {
-                          // Check if this is a consonant+vowel combination or just a vowel
-                          if (selectedConsonant != null ||
-                              selectedConjunct != null) {
-                            // This is a consonant+vowel combination, set it as selectedVowel
-                            selectedVowel = item;
-                          } else {
-                            // This is just a basic vowel
-                            selectedVowel = item;
-                          }
-                        });
-                        print('Selected akshara: $item');
-                      },
-                    ),
+                    child: button,
                   );
                 }).toList(),
               ),

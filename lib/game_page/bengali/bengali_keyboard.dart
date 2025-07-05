@@ -140,11 +140,10 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
   }
 
   bool _isAuxSignEnabled(String auxSign) {
-    // Only ৎ (khanda ta) is enabled when a consonant, conjunct, or vowel is selected
-    return auxSign == 'ৎ' &&
-        (selectedConsonant != null ||
-            selectedConjunct != null ||
-            selectedVowel != null);
+    // All auxiliary signs are enabled when a consonant, conjunct, or vowel is selected
+    return (selectedConsonant != null ||
+        selectedConjunct != null ||
+        selectedVowel != null);
   }
 
   String _combineConsonantVowel(String consonant, String vowel) {
@@ -193,11 +192,10 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                       bool isEnabled = _isAuxSignEnabled(auxSign);
                       String displayText = auxSign;
 
-                      // If it's ৎ and a consonant/conjunct/vowel is selected, show the combination
-                      if (auxSign == 'ৎ' &&
-                          (selectedConsonant != null ||
-                              selectedConjunct != null ||
-                              selectedVowel != null)) {
+                      // If a consonant/conjunct/vowel is selected, show the combination with auxiliary sign
+                      if (selectedConsonant != null ||
+                          selectedConjunct != null ||
+                          selectedVowel != null) {
                         String base;
                         if (selectedVowel != null &&
                             (selectedConsonant != null ||
@@ -211,7 +209,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                               selectedConsonant ??
                               selectedVowel!;
                         }
-                        displayText = base + 'ৎ';
+                        displayText = base + auxSign;
                         isEnabled =
                             true; // Always enable when showing combination
                       }
@@ -248,11 +246,10 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                             borderRadius: BorderRadius.circular(12.0),
                             onTap: isEnabled
                                 ? () {
-                                    if (auxSign == 'ৎ' &&
-                                        (selectedConsonant != null ||
-                                            selectedConjunct != null ||
-                                            selectedVowel != null)) {
-                                      // Reset the board when consonant/conjunct/vowel+ৎ is clicked
+                                    if (selectedConsonant != null ||
+                                        selectedConjunct != null ||
+                                        selectedVowel != null) {
+                                      // Reset the board when consonant/conjunct/vowel+auxiliary sign is clicked
                                       String base;
                                       if (selectedVowel != null &&
                                           (selectedConsonant != null ||
@@ -266,7 +263,7 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
                                             selectedConsonant ??
                                             selectedVowel!;
                                       }
-                                      String clickedAkshara = base + 'ৎ';
+                                      String clickedAkshara = base + auxSign;
                                       setState(() {
                                         selectedConsonant = null;
                                         selectedConjunct = null;

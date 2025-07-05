@@ -433,34 +433,50 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: _getFilteredConjuncts().map((conjunct) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: VowelButton(
-                      vowel: conjunct,
-                      isDraggable: false, // Conjunct row is not draggable
-                      onTap: () {
-                        setState(() {
-                          if (selectedConjunct == conjunct) {
-                            // If same conjunct is clicked again, deselect it
-                            selectedConjunct = null;
-                            filteringConsonant =
-                                null; // Clear filtering to show all conjuncts
-                            selectedAuxSign = null; // Clear auxiliary sign
-                          } else {
-                            // Select new conjunct and clear any selected consonant
-                            selectedConjunct = conjunct;
-                            selectedConsonant = null;
-                            // Don't clear selectedAuxSign - let it remain if ৎ was selected
-                            // Keep filteringConsonant unchanged to maintain filtered view
-                          }
-                        });
-                        print('Selected conjunct: $conjunct');
-                      },
-                      isHighlighted: selectedConjunct == conjunct,
-                    ),
-                  );
-                }).toList(),
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: _getFilteredConjuncts().isEmpty
+                    ? [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            'এই ব্যঞ্জনের জন্য কোনো সাধারণ যুক্তাক্ষর নেই',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ]
+                    : _getFilteredConjuncts().map((conjunct) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: VowelButton(
+                            vowel: conjunct,
+                            isDraggable: false, // Conjunct row is not draggable
+                            onTap: () {
+                              setState(() {
+                                if (selectedConjunct == conjunct) {
+                                  // If same conjunct is clicked again, deselect it
+                                  selectedConjunct = null;
+                                  filteringConsonant =
+                                      null; // Clear filtering to show all conjuncts
+                                  selectedAuxSign =
+                                      null; // Clear auxiliary sign
+                                } else {
+                                  // Select new conjunct and clear any selected consonant
+                                  selectedConjunct = conjunct;
+                                  selectedConsonant = null;
+                                  // Don't clear selectedAuxSign - let it remain if ৎ was selected
+                                  // Keep filteringConsonant unchanged to maintain filtered view
+                                }
+                              });
+                              print('Selected conjunct: $conjunct');
+                            },
+                            isHighlighted: selectedConjunct == conjunct,
+                          ),
+                        );
+                      }).toList(),
               ),
             ),
           ),

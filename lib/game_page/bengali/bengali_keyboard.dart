@@ -425,93 +425,43 @@ class _BengaliKeyboardState extends State<BengaliKeyboard> {
           ),
         ),
 
-        // Fourth row - Hasanta and Common Conjuncts (moved from 3rd row)
+        // Fourth row - Common Conjuncts
         Expanded(
           flex: 1,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-            child: Row(
-              children: [
-                // Hasanta button
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.0),
-                    border: Border.all(color: Colors.grey[300]!, width: 1.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(12.0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: _getFilteredConjuncts().map((conjunct) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: VowelButton(
+                      vowel: conjunct,
+                      isDraggable: false, // Conjunct row is not draggable
                       onTap: () {
-                        // TODO: Handle hasanta functionality
-                        print('Hasanta button pressed');
+                        setState(() {
+                          if (selectedConjunct == conjunct) {
+                            // If same conjunct is clicked again, deselect it
+                            selectedConjunct = null;
+                            filteringConsonant =
+                                null; // Clear filtering to show all conjuncts
+                            selectedAuxSign = null; // Clear auxiliary sign
+                          } else {
+                            // Select new conjunct and clear any selected consonant
+                            selectedConjunct = conjunct;
+                            selectedConsonant = null;
+                            // Don't clear selectedAuxSign - let it remain if ৎ was selected
+                            // Keep filteringConsonant unchanged to maintain filtered view
+                          }
+                        });
+                        print('Selected conjunct: $conjunct');
                       },
-                      child: const Center(
-                        child: Text(
-                          '্',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
+                      isHighlighted: selectedConjunct == conjunct,
                     ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                // Vertical divider
-                Container(width: 2, height: 50, color: Colors.grey),
-                const SizedBox(width: 8),
-                // Scrollable common conjuncts
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: _getFilteredConjuncts().map((conjunct) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: VowelButton(
-                            vowel: conjunct,
-                            isDraggable: false, // Conjunct row is not draggable
-                            onTap: () {
-                              setState(() {
-                                if (selectedConjunct == conjunct) {
-                                  // If same conjunct is clicked again, deselect it
-                                  selectedConjunct = null;
-                                  filteringConsonant =
-                                      null; // Clear filtering to show all conjuncts
-                                  selectedAuxSign =
-                                      null; // Clear auxiliary sign
-                                } else {
-                                  // Select new conjunct and clear any selected consonant
-                                  selectedConjunct = conjunct;
-                                  selectedConsonant = null;
-                                  // Don't clear selectedAuxSign - let it remain if ৎ was selected
-                                  // Keep filteringConsonant unchanged to maintain filtered view
-                                }
-                              });
-                              print('Selected conjunct: $conjunct');
-                            },
-                            isHighlighted: selectedConjunct == conjunct,
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ),
